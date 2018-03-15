@@ -6,13 +6,19 @@ import './Image.scss';
 class Image extends React.Component {
   static propTypes = {
     dto: PropTypes.object,
-    galleryWidth: PropTypes.number
+    galleryWidth: PropTypes.number,
+    idx: PropTypes.number,
+    onExpand: PropTypes.func
   };
 
   constructor(props) {
     super(props);
     this.calcImageSize = this.calcImageSize.bind(this);
+    this.handleRotate = this.handleRotate.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
     this.state = {
+      rotation: 0,
+      isDeleted: false,
       size: 200
     };
   }
@@ -31,24 +37,47 @@ class Image extends React.Component {
     this.calcImageSize();
   }
 
+  componentWillReceiveProps(newProps) {
+    if (newProps.galleryWidth !== this.props.galleryWidth) {
+      this.calcImageSize();
+    }
+  }
+
   urlFromDto(dto) {
     return `https://farm${dto.farm}.staticflickr.com/${dto.server}/${dto.id}_${dto.secret}.jpg`;
   }
 
+  handleRotate() {
+    this.setState({
+      rotation: (this.state.rotation + 90) % 360
+    });
+  }
+
+  handleDelete() {
+    this.setState({
+      isDeleted: true
+    });
+  }
+
   render() {
-    return (
+    return !this.state.isDeleted && (
       <div
         className="image-root"
         style={{
           backgroundImage: `url(${this.urlFromDto(this.props.dto)})`,
           width: this.state.size + 'px',
-          height: this.state.size + 'px'
+          height: this.state.size + 'px',
+          transform: `rotate(${this.state.rotation}deg)`
         }}
         >
-        <div>
-          <FontAwesome className="image-icon" name="sync-alt" title="rotate"/>
-          <FontAwesome className="image-icon" name="trash-alt" title="delete"/>
-          <FontAwesome className="image-icon" name="expand" title="expand"/>
+        <div
+          style={{
+            transform: `rotate(-${this.state.rotation}deg)`
+          }}
+        >
+          <FontAwesome className="image-icon" name="sync-alt" onClick={this.handleRotate}/>
+          <FontAwesome className="image-icon" name="trash-alt" onClick={this.handleDelete}/>
+          <FontAwesome className="image-icon" name="expand" onClick={() => this.props.onExpand(this.props.idx)}/>
         </div>
       </div>
     );
