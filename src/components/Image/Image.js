@@ -20,7 +20,8 @@ class Image extends React.Component {
       rotation: 0,
       isDeleted: false,
       size: 200,
-      top: 0
+      top: 0,
+      windowHeight: window.innerHeight
     };
   }
 
