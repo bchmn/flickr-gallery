@@ -19,7 +19,8 @@ class Image extends React.Component {
     this.state = {
       rotation: 0,
       isDeleted: false,
-      size: 200
+      size: 200,
+      top: 0
     };
   }
 
@@ -33,14 +34,30 @@ class Image extends React.Component {
     });
   }
 
+  calcImagePos() {
+    this.setState({
+      top: this.container.offsetTop
+    });
+  }
+
+  isVisible() {
+    const {top, size} = this.state;
+    const {scrollY, windowHeight} = this.props;
+    const isBelowTop = (top + size) >= scrollY;
+    const isAboveBottom = top <= (scrollY + windowHeight);
+    return isBelowTop && isAboveBottom;
+  }
+
   componentDidMount() {
     this.calcImageSize();
+    this.calcImagePos();
   }
 
   componentWillReceiveProps(newProps) {
     if (newProps.galleryWidth !== this.props.galleryWidth) {
       this.calcImageSize();
     }
+    this.calcImagePos();
   }
 
   urlFromDto(dto) {
@@ -63,8 +80,9 @@ class Image extends React.Component {
     return !this.state.isDeleted && (
       <div
         className="image-root"
+        ref={node => this.container = node}
         style={{
-          backgroundImage: `url(${this.urlFromDto(this.props.dto)})`,
+          backgroundImage: this.isVisible() ? `url(${this.urlFromDto(this.props.dto)})` : '',
           width: this.state.size + 'px',
           height: this.state.size + 'px',
           transform: `rotate(${this.state.rotation}deg)`

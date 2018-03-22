@@ -63,7 +63,15 @@ class Gallery extends React.Component {
   }
 
   getMoreImagesIfNeeded() {
-    const scrollRemainder = document.body.clientHeight - window.scrollY - window.innerHeight;
+    const scrollY = window.scrollY;
+    const windowHeight = window.innerHeight;
+
+    this.setState({
+      scrollY,
+      windowHeight
+    });
+  
+    const scrollRemainder = document.body.clientHeight - scrollY - window.innerHeight;
     if (scrollRemainder < 500 && !this.gettingImages) {
       this.gettingImages = true;
       this.setState({
@@ -101,7 +109,7 @@ class Gallery extends React.Component {
     return (
       <div className="gallery-root">
         {this.state.images.map((dto, idx) => {
-          return <Image key={'image-' + dto.id} dto={dto} idx={idx} onExpand={this.handleExpand} galleryWidth={this.state.galleryWidth}/>;
+          return <Image key={'image-' + dto.id} dto={dto} idx={idx} onExpand={this.handleExpand} galleryWidth={this.state.galleryWidth} scrollY={this.state.scrollY} windowHeight={this.state.windowHeight} />;
         })}
         <Expand images={this.state.images} expandIdx={this.state.expandIdx} onClose={() => this.handleExpand(-1)}/>
       </div>
