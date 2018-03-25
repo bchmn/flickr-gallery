@@ -43,16 +43,12 @@ class Image extends React.Component {
   }
 
   isVisible() {
-    if (this.props.virtualList) {
-      const insetPadding = 250;
-      const {top, size} = this.state;
-      const {scrollY, windowHeight} = this.props;
-      const isBelowTop = (top + size - insetPadding) >= scrollY;
-      const isAboveBottom = top <= (scrollY + windowHeight - insetPadding);
-      return isBelowTop && isAboveBottom;
-    } else {
-      return true;
-    }
+    const insetPadding = this.props.virtualList ? 250 : 0;
+    const {top, size} = this.state;
+    const {scrollY, windowHeight} = this.props;
+    const isBelowTop = (top + size - insetPadding) >= scrollY;
+    const isAboveBottom = top <= (scrollY + windowHeight - insetPadding);
+    return isBelowTop && isAboveBottom;
   }
 
   componentDidMount() {

@@ -25,7 +25,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="app-root">
-        <FontAwesome className="app-icon" name="magic" onClick={this.toggleVirtualList}/>
+        <FontAwesome className="app-icon" name="cogs" onClick={this.toggleVirtualList}/>
         <div className="app-header">
           <h2>Flickr Gallery</h2>
           <input className="app-input" onChange={event => this.setState({tag: event.target.value})} value={this.state.tag}/>
