@@ -7,7 +7,8 @@ import './Gallery.scss';
 
 class Gallery extends React.Component {
   static propTypes = {
-    tag: PropTypes.string
+    tag: PropTypes.string,
+    virtualList: PropTypes.bool
   };
 
   constructor(props) {
@@ -21,13 +22,15 @@ class Gallery extends React.Component {
       images: [],
       page: 1,
       expandIdx: -1,
+      scrollY: 0,
+      windowHeight: window.innerHeight,
       galleryWidth: this.getGalleryWidth()
     };
   }
 
   getGalleryWidth(){
     try {
-      return document.body.getBoundingClientRect().width;
+      return this.container.getBoundingClientRect().width;
     } catch (e) {
       return 1000;
     }
@@ -99,19 +102,22 @@ class Gallery extends React.Component {
 
   componentDidMount() {
     this.resetImages(this.props.tag);
+    this.resizeGallery();
   }
 
   componentWillReceiveProps(props) {
     this.resetImages(props.tag);
+    this.resizeGallery();
   }
 
   render() {
     return (
-      <div className="gallery-root">
+      <div className={'gallery-root ' + (this.props.virtualList ? 'virtual-list' : '')} ref={node => this.container = node}>
         {this.state.images.map((dto, idx) => {
-          return <Image key={'image-' + dto.id} dto={dto} idx={idx} onExpand={this.handleExpand} galleryWidth={this.state.galleryWidth} scrollY={this.state.scrollY} windowHeight={this.state.windowHeight} />;
+          return <Image key={'image-' + dto.id} dto={dto} idx={idx} onExpand={this.handleExpand} galleryWidth={this.state.galleryWidth} scrollY={this.state.scrollY} windowHeight={this.state.windowHeight} virtualList={this.props.virtualList}/>;
         })}
         <Expand images={this.state.images} expandIdx={this.state.expandIdx} onClose={() => this.handleExpand(-1)}/>
+        {this.props.virtualList && <div className="gallery-screen"/>}
       </div>
     );
   }

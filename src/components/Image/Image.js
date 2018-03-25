@@ -8,7 +8,8 @@ class Image extends React.Component {
     dto: PropTypes.object,
     galleryWidth: PropTypes.number,
     idx: PropTypes.number,
-    onExpand: PropTypes.func
+    onExpand: PropTypes.func,
+    virtualList: PropTypes.bool
   };
 
   constructor(props) {
@@ -42,11 +43,16 @@ class Image extends React.Component {
   }
 
   isVisible() {
-    const {top, size} = this.state;
-    const {scrollY, windowHeight} = this.props;
-    const isBelowTop = (top + size) >= scrollY;
-    const isAboveBottom = top <= (scrollY + windowHeight);
-    return isBelowTop && isAboveBottom;
+    if (this.props.virtualList) {
+      const insetPadding = 250;
+      const {top, size} = this.state;
+      const {scrollY, windowHeight} = this.props;
+      const isBelowTop = (top + size - insetPadding) >= scrollY;
+      const isAboveBottom = top <= (scrollY + windowHeight - insetPadding);
+      return isBelowTop && isAboveBottom;
+    } else {
+      return true;
+    }
   }
 
   componentDidMount() {

@@ -1,6 +1,7 @@
 body, html {
   padding: 0;
   margin: 0;
+  background: #f2f2f2;
 }
 
 .app-root {
@@ -23,4 +24,18 @@ body, html {
   color: #666;
   width: 400px;
   margin-bottom: 30px;
+}
+
+.app-icon {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  color: white;
+  cursor: pointer;
+  text-shadow: 0 0 10px black;
+  z-index: 9;
+
+  &:hover {
+    transform: scale(1.15);
+  }
 }

@@ -1,5 +1,14 @@
 .gallery-root {
   text-align: center;
+  background: #fff;  
+
+  &.virtual-list {
+    // max-width: calc(100% - 100px);
+    margin: 0 auto;  
+    // box-shadow: 5px 5px 10px 0 rgba(0,0,0,0.1);
+    // border: 1px solid #ccc;
+    
+  }
 }
 
 .gallery-header {
@@ -11,4 +20,19 @@
 
 .gallery-intro {
   font-size: 15pt;
+}
+
+.gallery-screen {
+  position: fixed;
+  background: transparent;// rgba(255, 255, 255, 0.5);
+  // border: 1px solid #fff;
+  // border-width: 2px 0;
+  top: 250px;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 500px);
+  box-sizing: border-box;
+  border-radius: 2px;
+  box-shadow: 0 0 0px 350px rgba(255,255,255,0.8);
+  margin: auto;
 }
