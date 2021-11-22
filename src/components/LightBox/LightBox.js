@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import "./lightBox.scss";
 import FontAwesome from "react-fontawesome";
 
-
 class LightBoxEx extends React.Component {
   static propTypes = {
     currentImgForLightBox: PropTypes.object,
@@ -63,9 +62,15 @@ class LightBoxEx extends React.Component {
   render() {
     return (
       <div className="continer-lightBox">
-        <button className="lightBox-button" onClick={this.showPrev}><i className="fas fa-chevron-circle-left"></i></button>
+        <button className="lightBox-button" onClick={this.showPrev}>
+          <i id="lightBox-i" className="fas fa-chevron-circle-left"></i>Prev
+        </button>
+        
         <img className="lightBox-img" src={`${this.state.imageToShow}`} />
-        <button className="lightBox-button" onClick={this.showNext}><i className="fas fa-chevron-circle-right"></i></button>
+
+        <button className="lightBox-button" onClick={this.showNext}>
+          <i id="lightBox-i" className="fas fa-chevron-circle-right"></i>Next
+        </button>
       </div>
     );
   }

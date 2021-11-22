@@ -31,15 +31,8 @@ class Image extends React.Component {
   calcImageSize() {
     const { galleryWidth } = this.props;
     const targetSize = 150;
-    let num = 0;
     const imagesPerRow =Math.floor(Math.round(galleryWidth / targetSize)) ;
-    if(galleryWidth >= 1000){
-      num = 37;
-    }else{
-      num = 60
-    }
-    const size = galleryWidth / imagesPerRow + num ;
-    // console.log(size);
+    const size = galleryWidth / imagesPerRow  ;
     this.setState({
       size,
     });
@@ -81,7 +74,7 @@ class Image extends React.Component {
         onDrop={handleDrop.bind(this)}
         className="image-root"
         style={{
-          backgroundImage: `url(${this.urlFromDto(dto)})`,
+          backgroundImage: `url(${this.urlFromDto(dto)})` ,
           width: this.state.size + "px",
           height: this.state.size + "px",
           transform: `rotate(${rotation}deg)`,

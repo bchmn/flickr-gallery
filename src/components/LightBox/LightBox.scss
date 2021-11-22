@@ -1,5 +1,5 @@
 .continer-lightBox {
-  background-color: #222;
+  background-color: rgb(255, 255, 255);
   width: 100%;
   height: 100%;
   display: flex;
@@ -10,19 +10,27 @@
   .lightBox-img {
     z-index: 100;
     cursor: pointer;
-    width: 70%;
-    height: 90%;
+    width: 50%;
+    height: 70%;
     border-radius: 3px;
     object-fit: cover;
-    box-shadow: -1px 1px 5px -1px rgba(103, 103, 103, 0.945);
+    box-shadow: -1px 1px 5px 1px rgb(231, 231, 231);
   }
 
-  .lightBox-button {
-    background-color: #222;
-    border: none;
-    i {
-      border: none;
-      font-size: 200%;
-    }
-  }
+
+
+}
+
+.lightBox-button{
+  background-color: #222;
+  border: none;
+}
+
+#lightBox-i {
+  border: none;
+  // font-size: 200%;
+  color: black;
+  width: 10%;
+  height: 10%;
+  border: turquoise 10px solid;
 }
