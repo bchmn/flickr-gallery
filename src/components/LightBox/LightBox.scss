@@ -1,0 +1,28 @@
+.continer-lightBox {
+  background-color: #222;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+
+  .lightBox-img {
+    z-index: 100;
+    cursor: pointer;
+    width: 70%;
+    height: 90%;
+    border-radius: 3px;
+    object-fit: cover;
+    box-shadow: -1px 1px 5px -1px rgba(103, 103, 103, 0.945);
+  }
+
+  .lightBox-button {
+    background-color: #222;
+    border: none;
+    i {
+      border: none;
+      font-size: 200%;
+    }
+  }
+}
