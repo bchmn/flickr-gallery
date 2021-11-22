@@ -24,7 +24,8 @@ class Gallery extends React.Component {
       currentImgForLightBox: {},
       numberOfPhotos: 0,
       currentTag: this.props.tag,
-      dragId:"",
+      dragId: "",
+      order:0,
     };
   }
 
@@ -36,7 +37,7 @@ class Gallery extends React.Component {
     }
   }
   getImages(tag2) {
-    const {isTagChanged, handleIsTagChanged, tag} = this.props
+    const { isTagChanged, handleIsTagChanged, tag } = this.props;
     // console.log(isTagChanged);
     const getImagesUrl = `services/rest/?method=flickr.photos.search&api_key=522c1f9009ca3609bcbaf08545f067ad&tags=${tag}&tag_mode=any&per_page=${100}&format=json&nojsoncallback=${1}`;
     const baseUrl = "https://api.flickr.com/";
@@ -51,55 +52,87 @@ class Gallery extends React.Component {
           res &&
           res.photos &&
           res.photos.photo &&
-          res.photos.photo.length > 0 
+          res.photos.photo.length > 0
         ) {
           const MySet = new Set();
-          
+
           if (!isTagChanged) {
-            const newImages = [...this.state.images, ...res.photos.photo].map((img, index, arr)=>{
-              MySet.add(img)
-          });
-          // console.log(this.state.images.length);
-          this.setState({ images: Array.from(MySet)});
-          // this.setState({currentTag: tag});
-
-
-          }else {
-          this.setState({ images: res.photos.photo});
-          // this.setState({currentTag: tag});
-          handleIsTagChanged(); // false
-          
+            if(this.state.order > 0){
+              this.setState({order: 0})
+            }
+            const newImages = [...this.state.images, ...res.photos.photo].filter(
+              (img) => {
+                this.setState({order: this.state.order +1})
+                MySet.add(img, this.state.order);
+                if (MySet.has(img.id)) {
+                  MySet.clear(img)
+                }
+              }
+            );
+            // console.log(newImages);
+            // MySet.add(newImages)
+            // console.log(this.state.images.length);
+            this.setState({ images: Array.from(MySet) });
+            // this.setState({currentTag: tag});
+          } else {
+            if(this.state.order > 0){
+              this.setState({order: 0})
+            }
+            this.setState({order: this.state.order +1})
+            const MySet2 = new Set();
+            const newArray = [...res.photos.photo].map((img)=>{
+              MySet2.add(img, this.state.order);
+              if (MySet2.has(img.id)) {
+                MySet2.clear(img)
+              }
+            })
+            // MySet2.add
+            this.setState({ images: Array.from(MySet2)});
+            console.log(this.state.images);
+            // this.setState({currentTag: tag});
+            handleIsTagChanged(); // false
           }
-
-        } 
+        }
       });
   }
 
   handleDrag = (ev) => {
-    this.setState({dragId:ev.currentTarget.id});
+    this.setState({ dragId: ev.currentTarget.id });
   };
 
- handleDrop = (ev) => {
-    const {images, dragId} = this.state;
-    // console.log(dragId);
+  handleDrop = (ev) => {
+    const { images, dragId } = this.state;
+    console.log(dragId);
     const dragImg = images.find((img) => img.id === dragId);
     const dropImg = images.find((img) => img.id === ev.currentTarget.id);
-// console.log(dragImg);
+    console.log(dragImg); // dragImg
+    console.log(dropImg);  // dropImg
+
     const dragImgOrder = dragImg.id;
     const dropImgOrder = dropImg.id;
 
+    console.log(dragImgOrder);
+    console.log(dropImgOrder);
+
+    
     const newImgState = images.map((img) => {
       if (img.id === dragId) {
-        img.id = dropImgOrder;
+         img.order = dropImgOrder;
+        // img.id = dragImgOrder;
+
       }
       if (img.id === ev.currentTarget.id) {
-        img.id = dragImgOrder;
+         img.order = dragImgOrder;
+        // img.id = dropImgOrder;
+
       }
-      console.log(img);
+      // img.id = dragImgOrder;
+      // console.log(img);
       return img;
     });
     console.log("handleDrop");
-    this.setState({ images: newImgState});
+    console.log(newImgState);
+    this.setState({ images: newImgState });
   };
 
   //useEffect
@@ -139,11 +172,11 @@ class Gallery extends React.Component {
   render() {
     const uniqId = new Date();
     const random = Math.floor(Math.random(uniqId.setMilliseconds() * 10));
-    const {isTagChanged, handleIsTagChanged, tag} = this.props
-    const {isOpen, currentImgForLightBox ,images ,galleryWidth} = this.state;
+    const { isTagChanged, handleIsTagChanged, tag } = this.props;
+    const { isOpen, currentImgForLightBox, images, galleryWidth } = this.state;
 
     return (
-      <div className={isOpen ?"gallery-root":"active"}>
+      <div className={isOpen ? "gallery-root" : "active"}>
         {isOpen ? (
           <div
             className="gallery-lightBox"
@@ -173,24 +206,32 @@ class Gallery extends React.Component {
                 console.log(props);
               }}
             > */}
-              <div className={isOpen ?"gallery-root":"active"}>
+            <div className={isOpen ? "gallery-root" : "active"}>
               {/* <Droppable> */}
-              {images.sort((a,b)=>a.id - b.id).map((dto, index) => {
-                return (
-                  <Image
-                    handleIsOpenImg={this.handleIsOpenImg.bind(this, dto)}
-                    key={"image-"+ uniqId.getFullYear().toString() + index + random + dto.id }
-                    dto={dto}
-                    handleDeleteImg={this.handleDeleteImg.bind(this, dto)}
-                    images={images}
-                    galleryWidth={galleryWidth}
-                    handleDrag={this.handleDrag.bind(this)}
-                    handleDrop={this.handleDrop.bind(this)}
-                  />
-                );
-              })}
+              {images
+                .sort((a, b) => a.order - b.order)
+                .map((dto, index) => {
+                  return (
+                    <Image
+                      handleIsOpenImg={this.handleIsOpenImg.bind(this, dto)}
+                      key={
+                        "image-" +
+                        uniqId.getFullYear().toString() +
+                        index +
+                        random +
+                        dto.id
+                      }
+                      dto={dto}
+                      handleDeleteImg={this.handleDeleteImg.bind(this, dto)}
+                      images={images}
+                      galleryWidth={galleryWidth}
+                      handleDrag={this.handleDrag.bind(this)}
+                      handleDrop={this.handleDrop.bind(this)}
+                    />
+                  );
+                })}
               {/* </Droppable> */}
-              </div>
+            </div>
             {/* </DragDropContext> */}
           </InfiniteScroll>
         )}

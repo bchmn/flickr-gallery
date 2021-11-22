@@ -86,6 +86,7 @@ class Image extends React.Component {
           height: this.state.size + "px",
           transform: `rotate(${rotation}deg)`,
         }}
+        onClick={(ev)=>{console.log(ev.currentTarget);}}
       >
         <div>
           <FontAwesome
