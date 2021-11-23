@@ -1,5 +1,17 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 .gallery-root {
   text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  // justify-content: flex-start;
 }
 
 .gallery-header {

@@ -1,11 +1,13 @@
 .image-root {
-  background-size: cover;
   background-position: center center;
   display: inline-block;
   vertical-align: top;
-  box-sizing: border-box;
+  box-sizing: content-box;
   position: relative;
-  border: 1px solid white;
+  float:none; 
+  flex-wrap: wrap;
+
+  
 
   > div {
     visibility: hidden;
@@ -17,7 +19,6 @@
     top: 0;
     left: 0;
     color: white;
-    padding: 15px;
     text-align: center;
     text-align: center;
     box-sizing: border-box;
@@ -25,6 +26,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  
   }
 
   &:hover > div {
@@ -46,5 +48,11 @@
       border-color: white;
     }
   }
+}
+.expanded-image{
+  position: absolute;
+  width: 90vw;
+    height: 90vh;
+    box-sizing: border-box;
 }
 

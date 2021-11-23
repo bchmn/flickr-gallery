@@ -7,8 +7,6 @@ class Image extends React.Component {
   static propTypes = {
     dto: PropTypes.object,
     galleryWidth: PropTypes.number,
-    deleteHandler: PropTypes.func,
-    index: PropTypes.number,
   };
 
   constructor(props) {
@@ -20,7 +18,8 @@ class Image extends React.Component {
     };
   }
 
-  calcImageSize(galleryWidth) {
+  calcImageSize() {
+    const { galleryWidth } = this.props;
     const targetSize = 200;
     const imagesPerRow = Math.round(galleryWidth / targetSize);
     const size = galleryWidth / imagesPerRow;
@@ -30,10 +29,7 @@ class Image extends React.Component {
   }
 
   componentDidMount() {
-    this.calcImageSize(this.props.galleryWidth);
-  }
-  componentWillReceiveProps(props) {
-    this.calcImageSize(props.galleryWidth);
+    this.calcImageSize();
   }
 
   urlFromDto(dto) {
@@ -52,37 +48,10 @@ class Image extends React.Component {
           backgroundImage: `url(${this.urlFromDto(this.props.dto)})`,
           width: this.state.size + "px",
           height: this.state.size + "px",
-          transform: `rotate(${rotation}deg) scale(1, 1)`,
+          transform: `rotate(${rotation}deg)`,
+          position: "absolute",
         }}
-      >
-        {/* check for css solution for background-only rotation */}
-        <div style={{ transform: `rotate(${-rotation}deg)` }}>
-          <FontAwesome
-            className="image-icon"
-            name="sync-alt"
-            title="rotate"
-            onClick={() => {
-              this.rotationHandler();
-            }}
-          />
-          <FontAwesome
-            className="image-icon"
-            name="trash-alt"
-            title="delete"
-            onClick={() => {
-              this.props.deleteHandler(this.props.dto.id);
-            }}
-          />
-          <FontAwesome
-            className="image-icon"
-            name="expand"
-            title="expand"
-            onClick={() => {
-              this.props.expandHandler(this.props.index);
-            }}
-          />
-        </div>
-      </div>
+      ></div>
     );
   }
 }
