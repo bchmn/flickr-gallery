@@ -17,20 +17,23 @@
     box-shadow: -1px 1px 5px 1px rgb(231, 231, 231);
   }
 
-
+  .lightBox-button{
+    background-color: rgb(223, 223, 223);
+    border: none;
+    width: 7%;
+    height: 5%;
+    box-shadow: -1px 1px 5px 1px rgb(171, 171, 171);
+    border-radius: 2px;
+    
+    #lightBox-i {
+      border: none;
+      color: black;
+      width: 10%;
+      height: 10%;
+    }
+  }
 
 }
 
-.lightBox-button{
-  background-color: #222;
-  border: none;
-}
 
-#lightBox-i {
-  border: none;
-  // font-size: 200%;
-  color: black;
-  width: 10%;
-  height: 10%;
-  border: turquoise 10px solid;
-}
+
