@@ -21,7 +21,7 @@ class Gallery extends React.Component {
       galleryWidth: this.getGalleryWidth(),
       isOpen: false,
       currentImgForLightBox: {},
-      numberOfPhotos: 0,
+      numberOfPhotos: 1,
       currentTag: this.props.tag,
       dragId: "",
       order:0,
@@ -37,7 +37,8 @@ class Gallery extends React.Component {
   }
   getImages(tag2) {
     const { isTagChanged, handleIsTagChanged, tag } = this.props;
-    const getImagesUrl = `services/rest/?method=flickr.photos.search&api_key=522c1f9009ca3609bcbaf08545f067ad&tags=${tag}&tag_mode=any&per_page=${100}&format=json&nojsoncallback=${1}`;
+    const num = this.state.numberOfPhotos;
+    const getImagesUrl = `services/rest/?method=flickr.photos.search&api_key=522c1f9009ca3609bcbaf08545f067ad&tags=${tag}&tag_mode=any&per_page=${100}&page=${num}&format=json&nojsoncallback=${1}`;
     const baseUrl = "https://api.flickr.com/";
     axios({
       url: getImagesUrl,
@@ -46,6 +47,8 @@ class Gallery extends React.Component {
     })
       .then((res) => res.data)
       .then((res) => {
+        const nonReplicatedSet = new Set();
+
         if (
           res &&
           res.photos &&
@@ -53,34 +56,26 @@ class Gallery extends React.Component {
           res.photos.photo.length > 0
         ) {  
           if (!isTagChanged) {
-            const nonReplicatedSet = new Set();
-           const nonReplicatedImages = [...this.state.images, ...res.photos.photo].map(
-              (img) => {
-                this.setState({order: this.state.order +1})
-                nonReplicatedSet.add(img, this.state.order);
-                if (nonReplicatedSet.has(img.id)) {
-                  nonReplicatedSet.clear(img)
-                }
-              }
-            );
-            console.log(nonReplicatedSet);
-            this.setState({ images: Array.from(nonReplicatedSet) });
-          } else {
-
-            // if(this.state.order > 0){
-            //   this.setState({order: 0})
-            // }
-
-            this.setState({order: this.state.order + 1})
-            const withoutDuplication = new Set();
-
-            [...res.photos.photo].filter((img)=>{
-              withoutDuplication.add(img, this.state.order);
-              if (withoutDuplication.has(img.id)) {
-                withoutDuplication.clear(img)
-              }
+            const lestImages = this.state.images;
+            const newImages = res.photos.photo;
+            const total = [...lestImages,...newImages];
+            total.forEach((img, index)=>{
+                 nonReplicatedSet.add(img)
             })
-            this.setState({ images: Array.from(withoutDuplication)});
+  
+            this.setState({ images: Array.from(nonReplicatedSet), numberOfPhotos: this.state.numberOfPhotos +1 });
+            
+          } else {
+            if (this.state.numberOfPhotos > 1) {
+            this.setState({numberOfPhotos:1});
+              
+            }
+            this.setState({order: this.state.order + 1})
+            const newImages = res.photos.photo; 
+            newImages.forEach((img)=>{
+              nonReplicatedSet.add(img, this.state.order);
+            })
+            this.setState({ images: Array.from(nonReplicatedSet)});
             handleIsTagChanged(); // false
           }
         }
@@ -183,7 +178,20 @@ class Gallery extends React.Component {
               </p>
             }
           >
-            {/* <div className={isOpen ? "gallery-root" : "active"}> */}
+            {
+              isOpen? <div
+              className="gallery-lightBox"
+              onClick={this.hideLightBox.bind(this)}
+            >
+              <LightBoxEx
+                images={images}
+                currentImgForLightBox={currentImgForLightBox}
+                isOpen={isOpen}
+                galleryWidth={galleryWidth}
+              />
+            </div>:""
+            }
+            <div className={isOpen ? "gallery-root" : "active"}>
               {images
                 .sort((a, b) => a.order - b.order)
                 .map((dto, index) => {
@@ -207,7 +215,7 @@ class Gallery extends React.Component {
                   );
                   
                 })}
-            {/* </div> */}
+            </div>
           </InfiniteScroll>
         )}
       </div>

@@ -63,13 +63,21 @@ class LightBoxEx extends React.Component {
     return (
       <div className="continer-lightBox">
         <button className="lightBox-button" onClick={this.showPrev}>
-          <i id="lightBox-i" className="fas fa-chevron-circle-left"></i>Prev
+          <FontAwesome            
+            className="prev-icon"
+            name="chevron-left"
+            title="prev" 
+          />
         </button>
         
-        <img className="lightBox-img" src={`${this.state.imageToShow}`} />
+        <img className="lightBox-img"  src={`${this.state.imageToShow}`} />
 
         <button className="lightBox-button" onClick={this.showNext}>
-          <i id="lightBox-i" className="fas fa-chevron-circle-right"></i>Next
+          <FontAwesome            
+            className="next-icon"
+            name="chevron-right"
+            title="next" 
+          />
         </button>
       </div>
     );
